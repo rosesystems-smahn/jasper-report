@@ -1,11 +1,17 @@
 package kr.rose.jasperreport.service;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import kr.rose.jasperreport.dto.Employee;
+import net.sf.jasperreports.engine.export.HtmlExporter;
+import net.sf.jasperreports.export.Exporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import org.springframework.stereotype.Service;
 
 
@@ -48,15 +54,27 @@ public class EmployeeReportService {
             // Export the report to a PDF file
             JasperExportManager.exportReportToPdfFile(jasperPrint, reportPath + "\\Emp-Rpt.pdf");
 
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, reportPath + "\\Emp-Rpt.html");
 
+            Exporter exporter = new HtmlExporter();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            exporter.setExporterOutput(new SimpleHtmlExporterOutput(out));
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            exporter.exportReport();
 
             System.out.println("Done");
 
-            return "Report successfully generated @path= " + reportPath;
+            String iframe = "<iframe src=\"file:\\\\\\" + reportPath + "\\Emp-Rpt.html  \" width=\"600\" height=\"300\">";
+
+            return "Report successfully generated @path= " + reportPath + "<p></p>" + out.toString("UTF-8");
 
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
         }
+    }
+
+    private String htmlText(ByteArrayOutputStream out){
+        return "";
     }
 }
