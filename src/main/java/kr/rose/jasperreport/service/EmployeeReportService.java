@@ -56,6 +56,11 @@ public class EmployeeReportService {
 
             JasperExportManager.exportReportToHtmlFile(jasperPrint, reportPath + "\\Emp-Rpt.html");
 
+            /**
+             * JasperExportManager 를 거치지 않고 String 형식으로 반환하는 코드,,,,,
+             * 참고 URL
+             * https://stackoverflow.com/questions/27779612/export-jasperreports-in-html-format
+             */
             Exporter exporter = new HtmlExporter();
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             exporter.setExporterOutput(new SimpleHtmlExporterOutput(out));
